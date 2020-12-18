@@ -7,7 +7,7 @@ import { Store } from 'redux';
 import { getStore } from './stores/getStore';
 import { PageState } from './stores/types/PageState';
 import { Home } from './components/Home/Home';
-import { CreateCustomer } from './components/Customer/CreateCustomer';
+import { EditResidentialProject } from './components/ResidentialProject/EditResidentialProject';
 import { MainMenu } from 'components/Menu/MainMenu';
 
 const MenuContainer = styled(Container)`
@@ -33,7 +33,7 @@ const PageComponent = withRouter(props => {
   return (
       <React.Suspense fallback={<div>Loading...</div>}>
           <Switch>
-              <Route path={`${mk.root}/spa/customer/create`} exact={true} component={CreateCustomer} />
+              <Route path={`${mk.root}/spa/project/create`} exact={true} component={EditResidentialProject} />
               <Route path={mk.root} exact={true} component={Home} />
           </Switch>
       </React.Suspense>
