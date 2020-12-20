@@ -7,3 +7,5 @@ target/
 .project
 .settings
 build/
+/mk-client/dist/*
+.eslintcache

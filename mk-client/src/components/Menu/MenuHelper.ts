@@ -5,7 +5,7 @@ export const customerMenu: TwoLevelMenuProps = {
     subMenuDetails: [
         {
             name: 'Manage Project',
-            url: `${mk.root}/spa/project/create`,
+            url: `${mk.contextRoot}/spa/project/create`,
         },
     ],
 };

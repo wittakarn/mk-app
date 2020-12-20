@@ -33,8 +33,8 @@ const PageComponent = withRouter(props => {
   return (
       <React.Suspense fallback={<div>Loading...</div>}>
           <Switch>
-              <Route path={`${mk.root}/spa/project/create`} exact={true} component={EditResidentialProject} />
-              <Route path={mk.root} exact={true} component={Home} />
+              <Route path={`${mk.contextRoot}/spa/project/create`} exact={true} component={EditResidentialProject} />
+              <Route path={mk.contextRoot} exact={true} component={Home} />
           </Switch>
       </React.Suspense>
   );

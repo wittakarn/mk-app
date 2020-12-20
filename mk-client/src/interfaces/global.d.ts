@@ -1,5 +1,5 @@
 interface Mk {
-    root: string;
+    contextRoot: string;
 }
 
 declare const mk: Mk

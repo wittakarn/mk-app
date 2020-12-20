@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && move build/* dist/META-INF/resources",
+    "build": "react-scripts build && copyfiles -u 1 build/* dist/META-INF/resources && copyfiles -u 1 build/static/** dist/META-INF/resources",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

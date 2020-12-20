@@ -3,6 +3,8 @@ export interface ResidentialProjectEditForm extends BaseForm {
     projectName: string;
     developerId: string | number;
     residentialId: string | number;
+    contractorId: string | number;
+    designerId: string | number;
 }
 
 export interface Developer {
@@ -15,10 +17,28 @@ export interface Residential {
     category: string;
 }
 
+export interface Constructor {
+    constructorId: number;
+    constructorName: string;
+}
+
+export interface Designer {
+    designerId: number;
+    designerName: string;
+}
+
 export interface DeveloperInfo {
     developers: Developer[];
 }
 
 export interface ResidentialInfo {
     residentials: Residential[];
+}
+
+export interface ConstructorInfo {
+    constructors: Constructor[];
+}
+
+export interface DesignerInfo {
+    designers: Designer[];
 }

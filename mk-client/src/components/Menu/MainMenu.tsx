@@ -134,7 +134,7 @@ const MainMenuComponent: React.FC<Props> = (props: Props) => {
                 <Toolbar>
                     {menuIcon}
                     <Typography variant="h6" noWrap>
-                        <HomeLink key="Home" to={mk.root}>
+                        <HomeLink key="Home" to={mk.contextRoot}>
                             TOA market share
                         </HomeLink>
                     </Typography>
