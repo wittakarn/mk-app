@@ -16,7 +16,7 @@ const ComparatorQuestionListComponent: React.FC<Props> = (props: Props) => {
             key={index}
             index={index + 1}
             toaProduct={t}
-            questionResult={props.questionDictionary[t.productId]}
+            questionResult={props.questionDictionary[t.productId] || {}}
             handleCompareRadioSelected={props.handleCompareRadioSelected}
             handleDecisionRadioSelected={props.handleDecisionRadioSelected}
         />

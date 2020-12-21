@@ -2,6 +2,7 @@ import React from "react";
 import { ToaProduct } from "interfaces/ToaProduct";
 import { Box, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Typography } from "@material-ui/core";
 import { QuestionResult } from "interfaces/Question";
+import { CompetitorComparison, FinalDecision } from "enums/Question";
 
 interface Props {
     index: number;
@@ -31,59 +32,59 @@ const ComparatorQuestionComponent: React.FC<Props> = (props: Props) => {
         >
             <Grid item sm={12}>
                 <Box component="div" paddingTop={6}>
-                    <Typography variant="h6">{props.index}). Product: {props.toaProduct.productName}</Typography>
+                    <Typography variant="h6">
+                        {props.index}). Product: {props.toaProduct.productName}
+                    </Typography>
                 </Box>
             </Grid>
             <Grid item sm={12}>
-                <FormControl component="fieldset">
+                <FormControl component="fieldset" required>
                     <FormLabel component="legend">Compare product with competitor</FormLabel>
                     <RadioGroup
                         row
                         aria-label="comparation"
-                        name="comparation"
-                        defaultValue="end"
-                        value={props.questionResult && props.questionResult.compareResult}
+                        name={`comparation-${props.toaProduct.productId}`}
+                        value={props.questionResult.compareResult || null}
                         onChange={handleCompareRadioChanged}>
                         <FormControlLabel
-                            value="outmatch"
-                            control={<Radio color="primary" />}
+                            value={CompetitorComparison.OUTMATCH}
+                            control={<Radio color="primary" required/>}
                             label="Outmatch" />
                         <FormControlLabel
-                            value="fall-behind"
-                            control={<Radio color="primary" />}
+                            value={CompetitorComparison.FALLBEHIDE}
+                            control={<Radio color="primary" required/>}
                             label="Fall behind" />
                         <FormControlLabel
-                            value="even"
-                            control={<Radio color="primary" />}
+                            value={CompetitorComparison.EVEN}
+                            control={<Radio color="primary" required/>}
                             label="Even" />
                         <FormControlLabel
-                            value="no-spec"
-                            control={<Radio color="primary" />}
+                            value={CompetitorComparison.NOSPEC}
+                            control={<Radio color="primary" required/>}
                             label="No specification" />
                     </RadioGroup>
                 </FormControl>
             </Grid>
             <Grid item sm={12}>
-                <FormControl component="fieldset">
+                <FormControl component="fieldset" required>
                     <FormLabel component="legend">Final decision</FormLabel>
                     <RadioGroup
                         row
                         aria-label="final decision"
-                        name="finalDecision"
-                        defaultValue="end"
-                        value={props.questionResult && props.questionResult.finalDecisionResult}
+                        name={`finalDecision-${props.toaProduct.productId}`}
+                        value={props.questionResult.finalDecisionResult || null}
                         onChange={handleDecisionRadioChanged}>
                         <FormControlLabel
-                            value="use-toa"
-                            control={<Radio color="primary" />}
+                            value={FinalDecision.USETOA}
+                            control={<Radio color="primary" required/>}
                             label="Use TOA" />
                         <FormControlLabel
-                            value="not-use-toa"
-                            control={<Radio color="primary" />}
+                            value={FinalDecision.NOTUSETOA}
+                            control={<Radio color="primary" required/>}
                             label="Not use TOA" />
                         <FormControlLabel
-                            value="tentative"
-                            control={<Radio color="primary" />}
+                            value={FinalDecision.TENTATIVE}
+                            control={<Radio color="primary" required/>}
                             label="Tentative" />
                     </RadioGroup>
                 </FormControl>
