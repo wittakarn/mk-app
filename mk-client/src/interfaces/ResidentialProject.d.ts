@@ -1,3 +1,5 @@
+import { QuestionResult } from "./Question";
+
 export interface ResidentialProjectEditForm extends BaseForm {
     id?: number;
     projectName: string;
@@ -5,6 +7,11 @@ export interface ResidentialProjectEditForm extends BaseForm {
     residentialId: string | number;
     contractorId: string | number;
     designerId: string | number;
+    questionDictionary: QuestionDictionary;
+}
+
+export interface QuestionDictionary {
+    [productId: number] : QuestionResult;
 }
 
 export interface Developer {

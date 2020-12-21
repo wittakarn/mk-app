@@ -10,5 +10,8 @@ export const initialState = {
     },
     designerInfo: {
         designers: [],
+    },
+    toaProductInfo: {
+        toaProducts: [],
     }
 };

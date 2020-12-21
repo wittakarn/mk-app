@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
 import { FormikBag, FormikProps, withFormik } from "formik";
 import { PageState } from "stores/types/PageState";
 import { ConstructorInfo, DesignerInfo, DeveloperInfo, ResidentialInfo, ResidentialProjectEditForm } from "interfaces/ResidentialProject";
@@ -8,6 +8,10 @@ import { fetchConstructorInfo, fetchDesignerInfo, fetchDeveloperInfo, fetchResid
 import { NotificationProps, withNotification } from "components/Dialog/Notification";
 import { ContainerWithoutPadding } from "components/Display/Container";
 import { initialState } from "./mapper";
+import { ToaProduct, ToaProductInfo } from "interfaces/ToaProduct";
+import { fetchToaProductInfo } from "services/toaProductService";
+import { AlignRightGrid } from "components/Display/Grid";
+import { ComparatorQuestionList } from "./ComparatorQuestionList";
 
 interface StateProps {
 }
@@ -24,6 +28,7 @@ interface OwnState {
     residentialInfo: ResidentialInfo;
     constructorInfo: ConstructorInfo;
     designerInfo: DesignerInfo;
+    toaProductInfo: ToaProductInfo;
 }
 
 type FormProps = OwnProps & NotificationProps;
@@ -41,11 +46,13 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
         const residentialInfo = await fetchResidentialInfo();
         const constructorInfo = await fetchConstructorInfo();
         const designerInfo = await fetchDesignerInfo();
+        const toaProductInfo = await fetchToaProductInfo();
         this.setState({
             developerInfo,
             residentialInfo,
             constructorInfo,
             designerInfo,
+            toaProductInfo,
         });
     }
 
@@ -81,8 +88,36 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
         ));
     }
 
+    handleCompareRadioSelected = (toaProduct: ToaProduct, value: string) => {
+        const { values, setFieldValue } = this.props;
+        setFieldValue(
+            'fields.questionDictionary',
+            {
+                ...values.fields.questionDictionary,
+                [toaProduct.productId]: {
+                    ...values.fields.questionDictionary[toaProduct.productId],
+                    compareResult: value,
+                }
+            },
+        );
+    }
+
+    handleDecisionRadioSelected = (toaProduct: ToaProduct, value: string) => {
+        const { values, setFieldValue } = this.props;
+        setFieldValue(
+            'fields.questionDictionary',
+            {
+                ...values.fields.questionDictionary,
+                [toaProduct.productId]: {
+                    ...values.fields.questionDictionary[toaProduct.productId],
+                    finalDecisionResult: value,
+                }
+            },
+        );
+    }
+
     render() {
-        const { values, handleChange, setFieldValue } = this.props;
+        const { values, handleChange } = this.props;
 
         return (
             <form onSubmit={this.props.handleSubmit}>
@@ -107,7 +142,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                                 required
                             />
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={6} xs={12}>
                             <FormControl required fullWidth={true}>
                                 <InputLabel id="residential-label">Residential</InputLabel>
                                 <Select
@@ -120,7 +155,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={6} xs={12}>
                             <FormControl required fullWidth={true}>
                                 <InputLabel id="contractor-label">Contractor</InputLabel>
                                 <Select
@@ -133,7 +168,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={6} xs={12}>
                             <FormControl required fullWidth={true}>
                                 <InputLabel id="developer-label">Developer</InputLabel>
                                 <Select
@@ -146,7 +181,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item sm={6}>
+                        <Grid item sm={6} xs={12}>
                             <FormControl required fullWidth={true}>
                                 <InputLabel id="designer-label">Designer</InputLabel>
                                 <Select
@@ -159,6 +194,22 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                                 </Select>
                             </FormControl>
                         </Grid>
+                        <Grid item sm={12}>
+                            <ComparatorQuestionList
+                                toaProductInfo={this.state.toaProductInfo}
+                                questionDictionary={values.fields.questionDictionary}
+                                handleCompareRadioSelected={this.handleCompareRadioSelected}
+                                handleDecisionRadioSelected={this.handleDecisionRadioSelected}
+                            />
+                        </Grid>
+                        <AlignRightGrid item sm={12}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                type="submit">
+                                Submit
+                            </Button>
+                        </AlignRightGrid>
                     </Grid>
                 </ContainerWithoutPadding>
             </form>
@@ -172,6 +223,7 @@ const initialValue: ResidentialProjectEditForm = {
     residentialId: '',
     contractorId: '',
     designerId: '',
+    questionDictionary: {},
 };
 
 const handleSubmit = async (values: FormValues, { props, resetForm }: FormikBag<FormProps, FormValues>) => {

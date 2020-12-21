@@ -8,10 +8,6 @@ type Props = OwnProps;
 
 class HomeComponent extends React.PureComponent<Props, {}> {
 
-    constructor(props: Props) {
-        super(props);
-    }
-
     render() {
         return (
             <Container>
