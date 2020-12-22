@@ -1,4 +1,5 @@
-import { ConstructorInfo, Constructor, Designer, DesignerInfo, Developer, DeveloperInfo, Residential, ResidentialInfo } from "interfaces/ResidentialProject";
+import * as superagent from 'superagent';
+import { ConstructorInfo, Constructor, Designer, DesignerInfo, Developer, DeveloperInfo, Residential, ResidentialInfo, ResidentialProjectRequest } from "interfaces/ResidentialProject";
 
 const mockDevelopers: Developer[] = [
     {
@@ -178,4 +179,12 @@ export const fetchDesignerInfo = async (): Promise<DesignerInfo> => {
             designers: [...mockDesigners],
         });
     });
+};
+
+export async function create(request: ResidentialProjectRequest): Promise<superagent.Response> {
+    const agent = superagent.post(`${mk.contextRoot}/api/project/create`);
+
+    return await agent
+        .accept('application/json; charset=UTF-8')
+        .send(request);
 };

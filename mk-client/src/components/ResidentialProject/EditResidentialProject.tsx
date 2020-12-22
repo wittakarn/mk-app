@@ -4,10 +4,10 @@ import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } fr
 import { FormikBag, FormikProps, withFormik } from "formik";
 import { PageState } from "stores/types/PageState";
 import { ConstructorInfo, DesignerInfo, DeveloperInfo, ResidentialInfo, ResidentialProjectEditForm } from "interfaces/ResidentialProject";
-import { fetchConstructorInfo, fetchDesignerInfo, fetchDeveloperInfo, fetchResidentialInfo } from "services/residentProjectService";
+import { create, fetchConstructorInfo, fetchDesignerInfo, fetchDeveloperInfo, fetchResidentialInfo } from "services/residentProjectService";
 import { NotificationProps, withNotification } from "components/Dialog/Notification";
 import { ContainerWithoutPadding } from "components/Display/Container";
-import { initialState } from "./mapper";
+import { initialState, mapResidentialProjectRequest } from "./mapper";
 import { ToaProduct, ToaProductInfo } from "interfaces/ToaProduct";
 import { fetchToaProductInfo } from "services/toaProductService";
 import { AlignRightGrid } from "components/Display/Grid";
@@ -227,7 +227,15 @@ const initialValue: ResidentialProjectEditForm = {
 };
 
 const handleSubmit = async (values: FormValues, { props, resetForm }: FormikBag<FormProps, FormValues>) => {
-    console.log(values);
+    const request = mapResidentialProjectRequest(values.fields);
+    const response = await create(request);
+
+    console.log(response);
+
+    props.handleNotificationOpen();
+    props.setBodyMessage('บันทึกข้อมูลเรียบร้อยแล้ว');
+    
+    resetForm({ values: { fields: initialValue } });
 }
 
 const mapPropsToValues = (props: OwnProps) => {

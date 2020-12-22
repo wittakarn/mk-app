@@ -10,6 +10,15 @@ export interface ResidentialProjectEditForm extends BaseForm {
     questionDictionary: QuestionDictionary;
 }
 
+export interface ResidentialProjectRequest {
+    projectName: string;
+    developerId: number;
+    residentialId: number;
+    contractorId: number;
+    designerId: number;
+    questionDictionary: QuestionDictionary;
+}
+
 export interface QuestionDictionary {
     [productId: number] : QuestionResult;
 }
