@@ -9,6 +9,7 @@ import { PageState } from './stores/types/PageState';
 import { Home } from './components/Home/Home';
 import { EditResidentialProject } from './components/ResidentialProject/EditResidentialProject';
 import { MainMenu } from 'components/Menu/MainMenu';
+import { MarketShareSummarize } from 'components/QuestionSummarize/MarketShareSummarize';
 
 const MenuContainer = styled(Container)`
     padding-bottom: 64px;
@@ -34,6 +35,7 @@ const PageComponent = withRouter(props => {
       <React.Suspense fallback={<div>Loading...</div>}>
           <Switch>
               <Route path={`${mk.contextRoot}/spa/project/create`} exact={true} component={EditResidentialProject} />
+              <Route path={`${mk.contextRoot}/spa/project/market-share`} exact={true} component={MarketShareSummarize} />
               <Route path={mk.contextRoot} exact={true} component={Home} />
           </Switch>
       </React.Suspense>

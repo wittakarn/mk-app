@@ -19,3 +19,8 @@ export const GridWithMarginMiddle = styled(Grid)`
     }
 `;
 GridWithMarginMiddle.displayName = 'GridWithMarginAuto';
+
+export const GridWithFixHeight = styled(Grid)<{ height: string }>`
+    height: ${p => p.height};
+`;
+GridWithFixHeight.displayName = 'GridWithFixHeight';

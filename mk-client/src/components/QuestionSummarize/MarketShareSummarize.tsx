@@ -1,17 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import { Button, Divider, FormControl, Grid, InputLabel, MenuItem, Select, Typography } from "@material-ui/core";
 import { FormikBag, FormikProps, withFormik } from "formik";
 import { PageState } from "stores/types/PageState";
-import { ConstructorInfo, DesignerInfo, DeveloperInfo, ResidentialInfo, ResidentialProjectEditForm } from "interfaces/ResidentialProject";
-import { create, fetchConstructorInfo, fetchDesignerInfo, fetchDeveloperInfo, fetchResidentialInfo } from "services/residentProjectService";
+import { ConstructorInfo, DesignerInfo, DeveloperInfo, ResidentialInfo } from "interfaces/ResidentialProject";
+import { fetchConstructorInfo, fetchDesignerInfo, fetchDeveloperInfo, fetchResidentialInfo } from "services/residentProjectService";
 import { NotificationProps, withNotification } from "components/Dialog/Notification";
 import { ContainerWithoutPadding } from "components/Display/Container";
-import { initialState, mapResidentialProjectRequest } from "./mapper";
-import { ToaProduct, ToaProductInfo } from "interfaces/ToaProduct";
+import { AlignRightGrid, GridWithFixHeight } from "components/Display/Grid";
+import { MarketShareSummarizeForm, QuestionDataSet } from "interfaces/MarketShareSummarize";
+import { initialState, mapCompareDataSet, mapMarketShareSummarizeRequest } from "./mapper";
+import { getQuestionResultList } from "services/questionResultService";
+import { QuestionResult } from "interfaces/Question";
+import { MarketSharePieGraph } from "./MarketSharePieGraph";
+import { ToaProductInfo } from "interfaces/ToaProduct";
 import { fetchToaProductInfo } from "services/toaProductService";
-import { AlignRightGrid } from "components/Display/Grid";
-import { ComparatorQuestionList } from "./ComparatorQuestionList";
 
 interface StateProps {
 }
@@ -20,7 +23,7 @@ interface OwnProps extends StateProps {
 }
 
 interface FormValues {
-    fields: ResidentialProjectEditForm;
+    fields: MarketShareSummarizeForm;
 }
 
 interface OwnState {
@@ -29,13 +32,14 @@ interface OwnState {
     constructorInfo: ConstructorInfo;
     designerInfo: DesignerInfo;
     toaProductInfo: ToaProductInfo;
+    questionDataSet: QuestionDataSet | null;
 }
 
 type FormProps = OwnProps & NotificationProps;
 type Props = FormProps & FormikProps<FormValues>;
 type State = OwnState;
 
-class EditResidentialProjectComponent extends React.PureComponent<Props, State> {
+class MarketShareSummarizeComponent extends React.PureComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = initialState;
@@ -88,39 +92,43 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
         ));
     }
 
-    handleCompareRadioSelected = (toaProduct: ToaProduct, value: string) => {
-        const { values, setFieldValue } = this.props;
-        setFieldValue(
-            'fields.questionDictionary',
-            {
-                ...values.fields.questionDictionary,
-                [toaProduct.productId]: {
-                    ...values.fields.questionDictionary[toaProduct.productId],
-                    compareResult: value,
-                }
-            },
-        );
+    renderPieGraph = () => {
+        if(this.state.questionDataSet && this.state.toaProductInfo.toaProducts) {
+            return this.state.toaProductInfo.toaProducts.map(t => (
+                (
+                    <React.Fragment>
+                        <GridWithFixHeight height="300px" item sm={6}>
+                            <Typography variant="h6">{`Compare product ${t.productName} with competitor`}</Typography>
+                            <MarketSharePieGraph pieData={this.state.questionDataSet!![t.productName].compareResultDataSet} />
+                        </GridWithFixHeight>
+                        <GridWithFixHeight height="300px" item sm={6}>
+                            <Typography variant="h6">{`Final decision of ${t.productName}`}</Typography>
+                            <MarketSharePieGraph pieData={this.state.questionDataSet!![t.productName].finalDecisionResultDataSet} />
+                        </GridWithFixHeight>
+                    </React.Fragment>
+                )
+            ));
+        }
+        return null;
     }
 
-    handleDecisionRadioSelected = (toaProduct: ToaProduct, value: string) => {
-        const { values, setFieldValue } = this.props;
-        setFieldValue(
-            'fields.questionDictionary',
-            {
-                ...values.fields.questionDictionary,
-                [toaProduct.productId]: {
-                    ...values.fields.questionDictionary[toaProduct.productId],
-                    finalDecisionResult: value,
-                }
-            },
-        );
+    handleViewResultClicked = async () => {
+        const { values } = this.props;
+        const response = await getQuestionResultList(mapMarketShareSummarizeRequest(values.fields));
+        console.log(response);
+
+        const questionResults: QuestionResult[] = response.body;
+
+        this.setState({
+            questionDataSet: mapCompareDataSet(this.state.toaProductInfo, questionResults),
+        });
     }
 
     render() {
         const { values, handleChange } = this.props;
 
         return (
-            <form onSubmit={this.props.handleSubmit}>
+            <form>
                 <ContainerWithoutPadding maxWidth="lg">
                     <Grid
                         container
@@ -129,21 +137,8 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                         alignItems="flex-start"
                         spacing={2}
                     >
-                        <Grid item sm={12}>
-                            <TextField
-                                name="fields.projectName"
-                                label="Project"
-                                variant="outlined"
-                                fullWidth={true}
-                                onChange={handleChange}
-                                value={values.fields.projectName}
-                                autoFocus={true}
-                                size="small"
-                                required
-                            />
-                        </Grid>
                         <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <InputLabel id="residential-label">Residential</InputLabel>
                                 <Select
                                     labelId="residential-label"
@@ -156,7 +151,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                             </FormControl>
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <InputLabel id="contractor-label">Contractor</InputLabel>
                                 <Select
                                     labelId="contractor-label"
@@ -169,7 +164,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                             </FormControl>
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <InputLabel id="developer-label">Developer</InputLabel>
                                 <Select
                                     labelId="developer-label"
@@ -182,7 +177,7 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                             </FormControl>
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
+                            <FormControl fullWidth={true}>
                                 <InputLabel id="designer-label">Designer</InputLabel>
                                 <Select
                                     labelId="designer-label"
@@ -194,22 +189,19 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item sm={12}>
-                            <ComparatorQuestionList
-                                toaProductInfo={this.state.toaProductInfo}
-                                questionDictionary={values.fields.questionDictionary}
-                                handleCompareRadioSelected={this.handleCompareRadioSelected}
-                                handleDecisionRadioSelected={this.handleDecisionRadioSelected}
-                            />
-                        </Grid>
                         <AlignRightGrid item sm={12}>
                             <Button
                                 variant="contained"
                                 color="primary"
-                                type="submit">
-                                Submit
+                                type="button"
+                                onClick={this.handleViewResultClicked}>
+                                View result
                             </Button>
                         </AlignRightGrid>
+                        <Grid item sm={12}>
+                            <Divider />
+                        </Grid>
+                        {this.renderPieGraph()}
                     </Grid>
                 </ContainerWithoutPadding>
             </form>
@@ -217,25 +209,14 @@ class EditResidentialProjectComponent extends React.PureComponent<Props, State> 
     }
 }
 
-const initialValue: ResidentialProjectEditForm = {
-    projectName: '',
+const initialValue: MarketShareSummarizeForm = {
     developerId: '',
     residentialId: '',
     contractorId: '',
     designerId: '',
-    questionDictionary: {},
 };
 
 const handleSubmit = async (values: FormValues, { props, resetForm }: FormikBag<FormProps, FormValues>) => {
-    const request = mapResidentialProjectRequest(values.fields);
-    const response = await create(request);
-
-    console.log(response);
-
-    props.handleNotificationOpen();
-    props.setBodyMessage('บันทึกข้อมูลเรียบร้อยแล้ว');
-    
-    resetForm({ values: { fields: initialValue } });
 }
 
 const mapPropsToValues = (props: OwnProps) => {
@@ -247,5 +228,5 @@ const mapPropsToValues = (props: OwnProps) => {
 const mapStateToProps = (state: PageState): StateProps => ({
 });
 
-export const EditResidentialProject = withNotification(connect(mapStateToProps)(withFormik<FormProps, FormValues>({ mapPropsToValues, handleSubmit })(EditResidentialProjectComponent)), 'แจ้งเตือน');;
-EditResidentialProject.displayName = 'EditResidentialProject';
+export const MarketShareSummarize = withNotification(connect(mapStateToProps)(withFormik<FormProps, FormValues>({ mapPropsToValues, handleSubmit })(MarketShareSummarizeComponent)), 'แจ้งเตือน');
+MarketShareSummarize.displayName = 'MarketShareSummarize';
