@@ -1,3 +1,19 @@
+CREATE TABLE IF NOT EXISTS `user_account` (
+	`account_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(100) NOT NULL,
+	`surname` VARCHAR(100) NOT NULL,
+	`user_name` VARCHAR(50) NOT NULL,
+	`user_password` VARCHAR(100) NOT NULL,
+	`role` VARCHAR(150) NOT NULL,
+	PRIMARY KEY (`account_id`)
+);
+
+CREATE TABLE IF NOT EXISTS `user_role` (
+	`role_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`role` VARCHAR(30) NOT NULL,
+	PRIMARY KEY (`role_id`)
+);
+
 CREATE TABLE IF NOT EXISTS `residential_project` (
 	`project_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`project_name` VARCHAR(100) NOT NULL,

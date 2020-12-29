@@ -1,7 +1,7 @@
 server:
   port: 18080
   servlet:
-        contextPath: /mk
+        contextPath: /toa
 logging:
   level:
     com.thaisoftplus: DEBUG

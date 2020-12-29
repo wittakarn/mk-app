@@ -1,6 +1,6 @@
 import { MarketShareSummarizeForm, MarketShareSummarizeRequest, PieDataSet, QuestionDataSet } from "interfaces/MarketShareSummarize";
 import { QuestionResult } from "interfaces/Question";
-import { ToaProduct, ToaProductInfo } from "interfaces/ToaProduct";
+import { ToaProductInfo } from "interfaces/ToaProduct";
 
 export const initialState = {
     developerInfo: {
