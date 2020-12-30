@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `user_account` (
 CREATE TABLE IF NOT EXISTS `user_role` (
 	`role_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`role` VARCHAR(30) NOT NULL,
+	`description` VARCHAR(100) NULL,
 	PRIMARY KEY (`role_id`)
 );
 
