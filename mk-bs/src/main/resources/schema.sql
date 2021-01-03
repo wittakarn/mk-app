@@ -4,13 +4,16 @@ CREATE TABLE IF NOT EXISTS `user_account` (
 	`surname` VARCHAR(100) NOT NULL,
 	`user_name` VARCHAR(50) NOT NULL,
 	`user_password` VARCHAR(100) NOT NULL,
-	`role` VARCHAR(150) NOT NULL,
+	`role` VARCHAR(30) NOT NULL,
+	`addition_role` VARCHAR(200) NULL,
 	PRIMARY KEY (`account_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `user_role` (
 	`role_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`role` VARCHAR(30) NOT NULL,
+	`role_under_care` VARCHAR(200) NULL,
+	`role_supervise` VARCHAR(200) NULL,
 	`description` VARCHAR(100) NULL,
 	PRIMARY KEY (`role_id`)
 );

@@ -25,6 +25,12 @@ public class UserRole implements Serializable {
 	@Column(name="\"role\"")
 	private String role;
 
+	@Column(name="\"role_supervise\"")
+	private String roleSupervise;
+
+	@Column(name="\"role_under_care\"")
+	private String roleUnderCare;
+
 	public UserRole() {
 	}
 
@@ -50,6 +56,22 @@ public class UserRole implements Serializable {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public String getRoleSupervise() {
+		return this.roleSupervise;
+	}
+
+	public void setRoleSupervise(String roleSupervise) {
+		this.roleSupervise = roleSupervise;
+	}
+
+	public String getRoleUnderCare() {
+		return this.roleUnderCare;
+	}
+
+	public void setRoleUnderCare(String roleUnderCare) {
+		this.roleUnderCare = roleUnderCare;
 	}
 
 }
