@@ -10,6 +10,7 @@ import { ContainerWithoutPadding } from "components/Display/Container";
 import { ToaProduct, ToaProductInfo } from "interfaces/ToaProduct";
 import { fetchToaProductInfo } from "services/toaProductService";
 import { AlignRightGrid } from "components/Display/Grid";
+import { UserAccountEditForm } from "interfaces/UserAccount";
 
 interface StateProps {
 }
@@ -18,7 +19,7 @@ interface OwnProps extends StateProps {
 }
 
 interface FormValues {
-    fields: ResidentialProjectEditForm;
+    fields: UserAccountEditForm;
 }
 
 interface OwnState {
@@ -127,14 +128,54 @@ class EditUserAccountComponent extends React.PureComponent<Props, State> {
                         alignItems="flex-start"
                         spacing={2}
                     >
-                        <Grid item sm={12}>
+                        <Grid item sm={6}>
                             <TextField
-                                name="fields.projectName"
-                                label="Project"
+                                name="fields.name"
+                                label="ชื่อ"
                                 variant="outlined"
                                 fullWidth={true}
                                 onChange={handleChange}
-                                value={values.fields.projectName}
+                                value={values.fields.name}
+                                autoFocus={true}
+                                size="small"
+                                required
+                            />
+                        </Grid>
+                        <Grid item sm={6}>
+                            <TextField
+                                name="fields.surname"
+                                label="นามสกุล"
+                                variant="outlined"
+                                fullWidth={true}
+                                onChange={handleChange}
+                                value={values.fields.surname}
+                                autoFocus={true}
+                                size="small"
+                                required
+                            />
+                        </Grid>
+                        <Grid item sm={6}>
+                            <TextField
+                                name="fields.username"
+                                label="username"
+                                variant="outlined"
+                                fullWidth={true}
+                                onChange={handleChange}
+                                value={values.fields.username}
+                                autoFocus={true}
+                                size="small"
+                                required
+                            />
+                        </Grid>
+                        <Grid item sm={6}>
+                            <TextField
+                                name="fields.password"
+                                label="password"
+                                type="password"
+                                variant="outlined"
+                                fullWidth={true}
+                                onChange={handleChange}
+                                value={values.fields.password}
                                 autoFocus={true}
                                 size="small"
                                 required
