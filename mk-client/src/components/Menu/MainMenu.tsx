@@ -6,7 +6,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { TwoLevelMenu } from './TwoLevelMenu';
-import { customerMenu } from './MenuHelper';
+import { customerMenu, userMenu } from './MenuHelper';
 import { PageState } from 'stores/types/PageState';
 import { mainStateAction } from 'stores/main/action';
 import { PureLink } from 'components/Display/Link';
@@ -119,6 +119,7 @@ const MainMenuComponent: React.FC<Props> = (props: Props) => {
             </MenuBackIconWrapper>
             <Divider />
             <List>
+                <TwoLevelMenu {...userMenu} onLinkClick={props.clearPageStore} />
                 <TwoLevelMenu {...customerMenu} onLinkClick={props.clearPageStore} />
             </List>
         </React.Fragment>

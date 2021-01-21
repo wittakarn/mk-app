@@ -5,7 +5,9 @@ export interface UserAccountEditForm extends BaseForm {
     name: string;
     surname: string;
     username: string;
-    password: string;
+    userPassword: string;
+    role: string;
+    additionRoles: string[];
 }
 
 export interface UserAccountRequest {
@@ -13,5 +15,7 @@ export interface UserAccountRequest {
     name: string;
     surname: string;
     username: string;
-    password: string;
+    userPassword: string;
+    role: string;
+    additionRoles: string[];
 }

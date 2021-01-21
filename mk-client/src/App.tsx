@@ -10,6 +10,7 @@ import { Home } from './components/Home/Home';
 import { EditResidentialProject } from './components/ResidentialProject/EditResidentialProject';
 import { MainMenu } from 'components/Menu/MainMenu';
 import { MarketShareSummarize } from 'components/QuestionSummarize/MarketShareSummarize';
+import { EditUserAccount } from 'components/UserAccount/EditUserAccount';
 
 const MenuContainer = styled(Container)`
     padding-bottom: 64px;
@@ -31,15 +32,16 @@ const BodyContainer = styled(Container) <any>`
 BodyContainer.displayName = 'BodyContainer';
 
 const PageComponent = withRouter(props => {
-  return (
-      <React.Suspense fallback={<div>Loading...</div>}>
-          <Switch>
-              <Route path={`${mk.contextRoot}/spa/project/create`} exact={true} component={EditResidentialProject} />
-              <Route path={`${mk.contextRoot}/spa/project/market-share`} exact={true} component={MarketShareSummarize} />
-              <Route path={mk.contextRoot} exact={true} component={Home} />
-          </Switch>
-      </React.Suspense>
-  );
+    return (
+        <React.Suspense fallback={<div>Loading...</div>}>
+            <Switch>
+                <Route path={`${mk.contextRoot}/spa/user/create`} exact={true} component={EditUserAccount} />
+                <Route path={`${mk.contextRoot}/spa/project/create`} exact={true} component={EditResidentialProject} />
+                <Route path={`${mk.contextRoot}/spa/project/market-share`} exact={true} component={MarketShareSummarize} />
+                <Route path={mk.contextRoot} exact={true} component={Home} />
+            </Switch>
+        </React.Suspense>
+    );
 })
 
 interface OwnProps {
@@ -53,58 +55,58 @@ interface State {
 type Props = OwnProps;
 
 class App extends React.PureComponent<Props, State> {
-  static displayName = 'App';
-  private store: Store<PageState>;
-  
-  constructor(props: Props) {
-      super(props);
-      this.store = getStore();
-      this.state = {
-          isMenuOpen: true,
-      };
-  }
+    static displayName = 'App';
+    private store: Store<PageState>;
 
-  setOpen = (isMenuOpen: boolean) => {
-      this.setState({
-          isMenuOpen
-      });
-  }
+    constructor(props: Props) {
+        super(props);
+        this.store = getStore();
+        this.state = {
+            isMenuOpen: true,
+        };
+    }
 
-  handleDrawerOpen = () => {
-      this.setOpen(true);
-  };
+    setOpen = (isMenuOpen: boolean) => {
+        this.setState({
+            isMenuOpen
+        });
+    }
 
-  handleDrawerClose = () => {
-      this.setOpen(false);
-  };
+    handleDrawerOpen = () => {
+        this.setOpen(true);
+    };
 
-  render() {
+    handleDrawerClose = () => {
+        this.setOpen(false);
+    };
 
-      const menuProps: MainMenuProps = {
-          handleDrawerOpen: this.handleDrawerOpen,
-          handleDrawerClose: this.handleDrawerClose,
-          isMenuOpen: this.state.isMenuOpen,
-      }
+    render() {
 
-      return (
-          <Container>
-              <Provider store={this.store}>
-                  <BrowserRouter>
-                      <Switch>
-                          <Route>
-                              <MenuContainer>
-                                  <MainMenu {...menuProps} />
-                              </MenuContainer>
-                              <BodyContainer open={this.state.isMenuOpen}>
-                                  <PageComponent />
-                              </BodyContainer>
-                          </Route>
-                      </Switch>
-                  </BrowserRouter>
-              </Provider>
-          </Container>
-      );
-  }
+        const menuProps: MainMenuProps = {
+            handleDrawerOpen: this.handleDrawerOpen,
+            handleDrawerClose: this.handleDrawerClose,
+            isMenuOpen: this.state.isMenuOpen,
+        }
+
+        return (
+            <Container>
+                <Provider store={this.store}>
+                    <BrowserRouter>
+                        <Switch>
+                            <Route>
+                                <MenuContainer>
+                                    <MainMenu {...menuProps} />
+                                </MenuContainer>
+                                <BodyContainer open={this.state.isMenuOpen}>
+                                    <PageComponent />
+                                </BodyContainer>
+                            </Route>
+                        </Switch>
+                    </BrowserRouter>
+                </Provider>
+            </Container>
+        );
+    }
 }
 
 export default App;

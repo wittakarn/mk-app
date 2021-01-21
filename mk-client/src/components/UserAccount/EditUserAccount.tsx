@@ -1,15 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
+import { Button, Chip, FormControl, Grid, Input, InputLabel, MenuItem, Select, TextField } from "@material-ui/core";
 import { FormikBag, FormikProps, withFormik } from "formik";
 import { PageState } from "stores/types/PageState";
-import { ConstructorInfo, DesignerInfo, DeveloperInfo, ResidentialInfo, ResidentialProjectEditForm } from "interfaces/ResidentialProject";
-import { create, fetchConstructorInfo, fetchDesignerInfo, fetchDeveloperInfo, fetchResidentialInfo } from "services/residentProjectService";
 import { NotificationProps, withNotification } from "components/Dialog/Notification";
 import { ContainerWithoutPadding } from "components/Display/Container";
-import { ToaProduct, ToaProductInfo } from "interfaces/ToaProduct";
-import { fetchToaProductInfo } from "services/toaProductService";
 import { AlignRightGrid } from "components/Display/Grid";
+import { ChipInDropdown } from "components/Display/Chip";
+import { UserRole } from "interfaces/UserRole";
+import { UserAccountEditForm } from "interfaces/UserAccount";
+import { mapUserAccountRequest } from "./mapper";
+import { create, fetchUserRoles } from "services/userService";
 
 interface StateProps {
 }
@@ -18,15 +19,11 @@ interface OwnProps extends StateProps {
 }
 
 interface FormValues {
-    fields: ResidentialProjectEditForm;
+    fields: UserAccountEditForm;
 }
 
 interface OwnState {
-    developerInfo: DeveloperInfo;
-    residentialInfo: ResidentialInfo;
-    constructorInfo: ConstructorInfo;
-    designerInfo: DesignerInfo;
-    toaProductInfo: ToaProductInfo;
+    roleOptions: UserRole[];
 }
 
 type FormProps = OwnProps & NotificationProps;
@@ -36,83 +33,39 @@ type State = OwnState;
 class EditUserAccountComponent extends React.PureComponent<Props, State> {
     constructor(props: Props) {
         super(props);
-        this.state = initialState;
+        this.state = {
+            roleOptions: [],
+        };
     }
 
     componentDidMount = async () => {
-        const developerInfo = await fetchDeveloperInfo();
-        const residentialInfo = await fetchResidentialInfo();
-        const constructorInfo = await fetchConstructorInfo();
-        const designerInfo = await fetchDesignerInfo();
-        const toaProductInfo = await fetchToaProductInfo();
+        const response = await fetchUserRoles();
         this.setState({
-            developerInfo,
-            residentialInfo,
-            constructorInfo,
-            designerInfo,
-            toaProductInfo,
+            roleOptions: [
+                ...response.body,
+            ],
         });
     }
 
-    renderDeveloperOptions = () => {
-        return this.state.developerInfo.developers.map(d => (
-            <MenuItem key={d.developerId} value={d.developerId}>
-                {d.developerName}
+    renderRoleOptions = () => {
+        return this.state.roleOptions.map(r => (
+            <MenuItem key={r.roleId} value={r.role}>
+                {r.role}
             </MenuItem>
         ));
     }
 
-    renderResidentialOptions = () => {
-        return this.state.residentialInfo.residentials.map(r => (
-            <MenuItem key={r.residentialId} value={r.residentialId}>
-                {r.category}
-            </MenuItem>
-        ));
-    }
-
-    renderConstructorOptions = () => {
-        return this.state.constructorInfo.constructors.map(c => (
-            <MenuItem key={c.constructorId} value={c.constructorId}>
-                {c.constructorName}
-            </MenuItem>
-        ));
-    }
-
-    renderDesignerOptions = () => {
-        return this.state.designerInfo.designers.map(d => (
-            <MenuItem key={d.designerId} value={d.designerId}>
-                {d.designerName}
-            </MenuItem>
-        ));
-    }
-
-    handleCompareRadioSelected = (toaProduct: ToaProduct, value: string) => {
-        const { values, setFieldValue } = this.props;
-        setFieldValue(
-            'fields.questionDictionary',
+    renderAdditionRoleChips = (selected: any): React.ReactNode => (
+        <div>
             {
-                ...values.fields.questionDictionary,
-                [toaProduct.productId]: {
-                    ...values.fields.questionDictionary[toaProduct.productId],
-                    compareResult: value,
-                }
-            },
-        );
-    }
-
-    handleDecisionRadioSelected = (toaProduct: ToaProduct, value: string) => {
-        const { values, setFieldValue } = this.props;
-        setFieldValue(
-            'fields.questionDictionary',
-            {
-                ...values.fields.questionDictionary,
-                [toaProduct.productId]: {
-                    ...values.fields.questionDictionary[toaProduct.productId],
-                    finalDecisionResult: value,
-                }
-            },
-        );
-    }
+                (selected as string[]).map(
+                    (value) => (
+                        <ChipInDropdown key={value} label={value} />
+                    ),
+                )
+            }
+        </div>
+    )
 
     render() {
         const { values, handleChange } = this.props;
@@ -127,68 +80,83 @@ class EditUserAccountComponent extends React.PureComponent<Props, State> {
                         alignItems="flex-start"
                         spacing={2}
                     >
-                        <Grid item sm={12}>
+                        <Grid item sm={6} xs={12}>
                             <TextField
-                                name="fields.projectName"
-                                label="Project"
+                                name="fields.name"
+                                label="ชื่อ"
                                 variant="outlined"
                                 fullWidth={true}
                                 onChange={handleChange}
-                                value={values.fields.projectName}
+                                value={values.fields.name}
                                 autoFocus={true}
                                 size="small"
                                 required
                             />
                         </Grid>
                         <Grid item sm={6} xs={12}>
+                            <TextField
+                                name="fields.surname"
+                                label="นามสกุล"
+                                variant="outlined"
+                                fullWidth={true}
+                                onChange={handleChange}
+                                value={values.fields.surname}
+                                size="small"
+                                required
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                name="fields.username"
+                                label="ชื่อผู้ใช้งานระบบ (ภาษาอังกฤษ)"
+                                variant="outlined"
+                                fullWidth={true}
+                                onChange={handleChange}
+                                value={values.fields.username}
+                                size="small"
+                                required
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
+                            <TextField
+                                name="fields.userPassword"
+                                label="รหัสผ่าน"
+                                variant="outlined"
+                                fullWidth={true}
+                                onChange={handleChange}
+                                value={values.fields.userPassword}
+                                size="small"
+                                required
+                            />
+                        </Grid>
+                        <Grid item sm={6} xs={12}>
                             <FormControl required fullWidth={true}>
-                                <InputLabel id="residential-label">Residential</InputLabel>
+                                <InputLabel id="role-label">สิทธิ์การใช้การ</InputLabel>
                                 <Select
-                                    labelId="residential-label"
-                                    name="fields.residentialId"
-                                    value={values.fields.residentialId}
+                                    labelId="role-label"
+                                    id="role"
+                                    name="fields.role"
+                                    value={values.fields.role}
                                     onChange={handleChange}
                                 >
-                                    {this.renderResidentialOptions()}
+                                    {this.renderRoleOptions()}
                                 </Select>
                             </FormControl>
                         </Grid>
                         <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
-                                <InputLabel id="contractor-label">Contractor</InputLabel>
+                            <FormControl fullWidth={true}>
+                                <InputLabel id="addition-role-chip-label">สิทธิ์การใช้การเพิ่มเติม</InputLabel>
                                 <Select
-                                    labelId="contractor-label"
-                                    name="fields.contractorId"
-                                    value={values.fields.contractorId}
+                                    labelId="addition-role-chip-label"
+                                    id="addition-role-mutiple-chip"
+                                    name="fields.additionRoles"
+                                    multiple
+                                    value={values.fields.additionRoles}
                                     onChange={handleChange}
+                                    input={<Input id="select-multiple-chip" />}
+                                    renderValue={this.renderAdditionRoleChips}
                                 >
-                                    {this.renderConstructorOptions()}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
-                                <InputLabel id="developer-label">Developer</InputLabel>
-                                <Select
-                                    labelId="developer-label"
-                                    name="fields.developerId"
-                                    value={values.fields.developerId}
-                                    onChange={handleChange}
-                                >
-                                    {this.renderDeveloperOptions()}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                        <Grid item sm={6} xs={12}>
-                            <FormControl required fullWidth={true}>
-                                <InputLabel id="designer-label">Designer</InputLabel>
-                                <Select
-                                    labelId="designer-label"
-                                    name="fields.designerId"
-                                    value={values.fields.designerId}
-                                    onChange={handleChange}
-                                >
-                                    {this.renderDesignerOptions()}
+                                    {this.renderRoleOptions()}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -207,24 +175,24 @@ class EditUserAccountComponent extends React.PureComponent<Props, State> {
     }
 }
 
-const initialValue: ResidentialProjectEditForm = {
-    projectName: '',
-    developerId: '',
-    residentialId: '',
-    contractorId: '',
-    designerId: '',
-    questionDictionary: {},
+const initialValue: UserAccountEditForm = {
+    name: '',
+    surname: '',
+    username: '',
+    userPassword: '',
+    role: '',
+    additionRoles: [],
 };
 
 const handleSubmit = async (values: FormValues, { props, resetForm }: FormikBag<FormProps, FormValues>) => {
-    const request = mapResidentialProjectRequest(values.fields);
+    const request = mapUserAccountRequest(values.fields);
     const response = await create(request);
 
     console.log(response);
 
     props.handleNotificationOpen();
     props.setBodyMessage('บันทึกข้อมูลเรียบร้อยแล้ว');
-    
+
     resetForm({ values: { fields: initialValue } });
 }
 
