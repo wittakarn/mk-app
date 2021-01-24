@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `user_account` (
 	`user_password` VARCHAR(100) NOT NULL,
 	`role` VARCHAR(30) NOT NULL,
 	`addition_role` VARCHAR(200) NULL,
+	`status` VARCHAR(20) NULL,
 	PRIMARY KEY (`account_id`)
 );
 

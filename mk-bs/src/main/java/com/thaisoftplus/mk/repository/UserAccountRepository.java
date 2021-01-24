@@ -21,8 +21,6 @@ public class UserAccountRepository implements Serializable {
         Query query = em.createQuery(sb.toString());
         query.setParameter("userName", userName);
 
-        Object userAccountObject = query.getSingleResult();
-
-        return userAccountObject == null ? null : (UserAccount) userAccountObject;
+        return (UserAccount) query.getResultList().stream().findFirst().orElse(null);
     }
 }

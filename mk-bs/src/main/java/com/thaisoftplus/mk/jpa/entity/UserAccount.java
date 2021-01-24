@@ -36,6 +36,9 @@ public class UserAccount implements Serializable {
 
 	@Column(name="\"user_password\"")
 	private String userPassword;
+	
+	@Column(name="\"status\"")
+	private String status;
 
 	public UserAccount() {
 	}
@@ -94,6 +97,14 @@ public class UserAccount implements Serializable {
 
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }
