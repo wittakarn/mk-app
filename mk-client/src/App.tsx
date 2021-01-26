@@ -11,6 +11,7 @@ import { EditResidentialProject } from './components/ResidentialProject/EditResi
 import { MainMenu } from 'components/Menu/MainMenu';
 import { MarketShareSummarize } from 'components/QuestionSummarize/MarketShareSummarize';
 import { EditUserAccount } from 'components/UserAccount/EditUserAccount';
+import { ResetPassword } from 'components/UserAccount/ResetPassword';
 
 const MenuContainer = styled(Container)`
     padding-bottom: 64px;
@@ -35,6 +36,7 @@ const PageComponent = withRouter(props => {
     return (
         <React.Suspense fallback={<div>Loading...</div>}>
             <Switch>
+                <Route path={`${mk.contextRoot}/spa/user/reset-password`} exact={true} component={ResetPassword} />
                 <Route path={`${mk.contextRoot}/spa/user/create`} exact={true} component={EditUserAccount} />
                 <Route path={`${mk.contextRoot}/spa/project/create`} exact={true} component={EditResidentialProject} />
                 <Route path={`${mk.contextRoot}/spa/project/market-share`} exact={true} component={MarketShareSummarize} />

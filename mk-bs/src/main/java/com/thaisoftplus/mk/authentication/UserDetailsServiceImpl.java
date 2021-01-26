@@ -14,18 +14,18 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserAccountBusiness userAccountBusiness;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         UserAccount userAccount = userAccountBusiness.getUserAccountByUsername(username);
 
         if (userAccount == null) {
             throw new UsernameNotFoundException("Could not find user");
         }
-        
-        if("inactive".equals(userAccount.getStatus())) {
-        	throw new DisabledException("It is first login. Password change is required!");
+
+        if ("inactive".equals(userAccount.getStatus())) {
+            throw new DisabledException("It is first login. Password change is required!");
         }
+
         return new MyUserDetails(userAccount);
-        
     }
 
 }

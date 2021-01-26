@@ -36,8 +36,9 @@ public class UserAccountBusiness {
         ua.setName(request.getName());
         ua.setRole(request.getRole());
         ua.setSurname(request.getSurname());
-        ua.setUserName(request.getSurname());
+        ua.setUserName(request.getUserName());
         ua.setUserPassword(new BCryptPasswordEncoder().encode(request.getUserPassword()));
+        ua.setStatus("inactive");
 
         em.persist(ua);
 

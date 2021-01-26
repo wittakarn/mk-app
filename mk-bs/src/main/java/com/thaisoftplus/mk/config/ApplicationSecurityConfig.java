@@ -10,9 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
-import com.thaisoftplus.mk.authentication.AuthenticationFailureListener;
 import com.thaisoftplus.mk.authentication.UserDetailsServiceImpl;
 
 @Configuration
@@ -38,11 +36,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
         return authProvider;
     }
-    
-    @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        return new AuthenticationFailureListener();
-    }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
@@ -50,7 +43,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated() //
                 .and() //
                 .formLogin().permitAll() //
-                .failureHandler(authenticationFailureHandler()) //
                 .and() //
                 .logout().permitAll() //
                 .and() //
@@ -66,6 +58,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web //
                 .ignoring() //
-                .antMatchers("/h2-console/**", "/reset-password");
+                .antMatchers("/h2-console/**");
     }
 }
