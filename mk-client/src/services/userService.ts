@@ -6,6 +6,11 @@ export async function fetchUserRoles(): Promise<superagent.Response> {
     return await agent.type('application/json');
 };
 
+export async function getUser(): Promise<superagent.Response> {
+    const agent = superagent.get(`${mk.contextRoot}/api/user/information`);
+    return await agent.type('application/json');
+};
+
 export async function create(request: UserAccountRequest): Promise<superagent.Response> {
     const agent = superagent.post(`${mk.contextRoot}/api/user/create`);
 

@@ -23,6 +23,12 @@ public class UserAccountBusiness {
         return repository.getUserAccountByUsername(em, userName);
     }
 
+    public UserAccount getUserAccountWithoutSensitiveDataByUsername(String userName) {
+        UserAccount userAccount = repository.getUserAccountByUsername(em, userName);
+        userAccount.setUserPassword(null);
+        return userAccount;
+    }
+
     @Transactional
     public UserAccount create(UserAccountRequest request) {
         UserAccount ua = new UserAccount();

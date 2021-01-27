@@ -1,17 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Switch, withRouter } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Container } from '@material-ui/core';
 import { Store } from 'redux';
 import { getStore } from './stores/getStore';
 import { PageState } from './stores/types/PageState';
-import { Home } from './components/Home/Home';
-import { EditResidentialProject } from './components/ResidentialProject/EditResidentialProject';
 import { MainMenu } from 'components/Menu/MainMenu';
-import { MarketShareSummarize } from 'components/QuestionSummarize/MarketShareSummarize';
-import { EditUserAccount } from 'components/UserAccount/EditUserAccount';
-import { ResetPassword } from 'components/UserAccount/ResetPassword';
+import { BasePage } from 'PageBaseComponent';
 
 const MenuContainer = styled(Container)`
     padding-bottom: 64px;
@@ -31,20 +27,6 @@ const BodyContainer = styled(Container) <any>`
     }
 `;
 BodyContainer.displayName = 'BodyContainer';
-
-const PageComponent = withRouter(props => {
-    return (
-        <React.Suspense fallback={<div>Loading...</div>}>
-            <Switch>
-                <Route path={`${mk.contextRoot}/spa/user/reset-password`} exact={true} component={ResetPassword} />
-                <Route path={`${mk.contextRoot}/spa/user/create`} exact={true} component={EditUserAccount} />
-                <Route path={`${mk.contextRoot}/spa/project/create`} exact={true} component={EditResidentialProject} />
-                <Route path={`${mk.contextRoot}/spa/project/market-share`} exact={true} component={MarketShareSummarize} />
-                <Route path={mk.contextRoot} exact={true} component={Home} />
-            </Switch>
-        </React.Suspense>
-    );
-})
 
 interface OwnProps {
 
@@ -100,7 +82,7 @@ class App extends React.PureComponent<Props, State> {
                                     <MainMenu {...menuProps} />
                                 </MenuContainer>
                                 <BodyContainer open={this.state.isMenuOpen}>
-                                    <PageComponent />
+                                    <BasePage />
                                 </BodyContainer>
                             </Route>
                         </Switch>

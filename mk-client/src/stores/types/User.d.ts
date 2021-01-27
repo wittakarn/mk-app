@@ -1,5 +1,9 @@
 export interface User {
+    accountId: number;
+    name: string;
+    surname: string;
     username: string;
-    fullName: string;
-    roles: string;
+    role: string;
+    additionRoles: string;
+    status: string;
 }

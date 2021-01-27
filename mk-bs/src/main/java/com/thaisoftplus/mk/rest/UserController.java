@@ -1,5 +1,6 @@
 package com.thaisoftplus.mk.rest;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import com.thaisoftplus.mk.business.UserAccountBusiness;
 import com.thaisoftplus.mk.business.UserRoleBusiness;
 import com.thaisoftplus.mk.domain.ResponseMessage;
 import com.thaisoftplus.mk.domain.UserAccountRequest;
+import com.thaisoftplus.mk.jpa.entity.UserAccount;
 import com.thaisoftplus.mk.jpa.entity.UserRole;
 import com.thaisoftplus.mk.util.ErrorMessageUtil;
 
@@ -31,6 +33,11 @@ public class UserController {
     public List<UserRole> getRoles() {
         logger.info("Begin getRoles");
         return userRoleBusiness.getRoles();
+    }
+
+    @GetMapping("api/user/information")
+    public UserAccount currentUserName(Principal principal) {
+        return userAccountBusiness.getUserAccountWithoutSensitiveDataByUsername(principal.getName());
     }
 
     @PostMapping(value = "api/user/create", produces = MediaType.APPLICATION_JSON_VALUE)
